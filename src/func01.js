@@ -1,2 +1,2 @@
 const f = a => a * a;
-console.log(f(10));
+console.log(f(15));
