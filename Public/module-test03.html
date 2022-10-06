@@ -12,8 +12,10 @@
     <script type="module">
         import Person, {p1} from './Person.js';
 
-        info.innerText = p1.toString();
-        console.log(p1.name);
+        const p2 = new Person('Stacy', 20, 'female');
+
+        info.innerText = p2.toString();
+        console.log(p1.age);
     </script>
 </body>
 </html>
