@@ -1,12 +1,13 @@
-class Person {
-    constructor(name = 'noname', age = 18) {
+export default class Person {
+    constructor(name = 'noname', age = 18, gender) {
         this.name = name;
         this.age = age;
+        this.gender = gender;
     }
 
     toJSON() {
-        const {name, age} = this;
-        return {name, age};
+        const { name, age, gender } = this;
+        return { name, age, gender };
     }
 
     toString() {
@@ -14,6 +15,11 @@ class Person {
     }
 }
 
-const p1 = new Person('Mary', 25);
+const p1 = new Person('Mary', 25, 'female');
 
-console.log(p1 +'');
+console.log(p1);
+
+const a = 10;
+const b = n => n * (n + 1);
+
+export {a, b};
