@@ -1,0 +1,24 @@
+<%- include('parts/html-head') %>
+    <%- include('parts/navbar') %>
+        <div class="container">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Age</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(item of sales) {%>
+                    <tr>
+                        <td><%= item.id %></td>
+                        <td><%= item.name %></td>
+                        <td><%= item.age %></td>
+                    </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+        <%- include('parts/scripts') %>
+            <%- include('parts/html-foot') %>
