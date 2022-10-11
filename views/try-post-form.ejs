@@ -1,5 +1,5 @@
 <%- include('parts/html-head') %>
-    <%- include('parts/navbar') %>
+<%- include('parts/navbar') %>
         <div class="container">
             <div class="col-lg-6">
                 <form method="post">
@@ -7,19 +7,19 @@
                         <label for="email" class="form-label">Email address</label>
                         <input type="text" class="form-control" id="email" name="email">
                         <div class="form-text">
-                            <%= locals.email? locals.email: '' %>
+                            <%= locals.email? email: '' %>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label for="password" class="form-label">Password</label>
                         <input type="password" class="form-control" id="password" name="password">
                         <div class="form-text">
-                            <%= locals.password? locals.password: '' %>
+                            <%= locals.password? password: '' %>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
             </div>
         </div>
-        <%- include('parts/scripts') %>
-            <%- include('parts/html-foot') %>
+<%- include('parts/scripts') %>
+<%- include('parts/html-foot') %>
