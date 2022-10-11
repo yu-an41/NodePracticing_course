@@ -1,2 +1,8 @@
-hello, 
-<%= name %> 
+<%- include('parts/html-head') %>
+<%- include('parts/navbar') %>
+<div class="container">
+    hello, 
+    <%= name %> 
+</div>
+<%- include('parts/scripts') %>
+<%- include('parts/html-foot') %>
