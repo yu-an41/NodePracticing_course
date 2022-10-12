@@ -74,6 +74,10 @@ app.post('/try-upload', upload.single('avatar'), async (req, res)=> {
     */ 
 })
 
+app.post('/try-upload2', upload.array('photos'), async (req, res)=> {
+    res.json(req.files);
+})
+
 app.use((req, res) => {
     res.type('text/html');
     res.status(404).render('404');
