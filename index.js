@@ -2,6 +2,9 @@ require('dotenv').config();
 // dotenv會自動找到專案中最外層.env設定檔
 
 const express = require('express');
+const multer = require('multer');
+const upload = multer({ dest: 'tmp_uploads/' });
+const fs = require('fs').promises;
 
 const app = express();
 app.set('view engine', 'ejs');
@@ -54,6 +57,16 @@ app.post('/try-post-form', (req, res) => {
 
 app.post('/try-post', (req, res) => {
     res.json(req.body);
+})
+
+app.post('/try-upload', upload.single('avatar'), async (req, res) => {
+    if (req.file && req.file.originalname) {
+        fs.rename(req.file.path, `public/imgs/${req.file.originalname}`);
+        res.json(req.file);
+    }
+    else {
+        res.json({ msg: '沒有上傳檔案' });
+    }
 })
 
 app.use((req, res) => {
