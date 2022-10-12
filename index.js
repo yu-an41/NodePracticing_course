@@ -61,7 +61,7 @@ app.post('/try-post', (req, res) => {
 
 app.post('/try-upload', upload.single('avatar'), async (req, res) => {
     if (req.file && req.file.originalname) {
-        fs.rename(req.file.path, `public/imgs/${req.file.originalname}`);
+        await fs.rename(req.file.path, `public/imgs/${req.file.originalname}`);
         res.json(req.file);
     }
     else {
