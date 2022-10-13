@@ -2,6 +2,8 @@ require('dotenv').config();
 // dotenv會自動找到專案中最外層.env設定檔
 
 const express = require('express');
+express.yuan = '你好~';
+
 // const multer = require('multer');
 // const upload = multer({ dest: 'tmp_uploads/' });
 const upload = require(__dirname + '/modules/upload-img');
