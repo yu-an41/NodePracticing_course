@@ -78,6 +78,22 @@ app.post('/try-upload2', upload.array('photos'), async (req, res)=> {
     res.json(req.files);
 })
 
+app.get('/my-params1/:action?/:id?', async (req, res) => {
+    res.json(req.params);
+})
+
+app.get(/^\/m\/09\d{2}\-?\d{3}\-?\d{3}$/i, (req, res) => {
+    //從09開始保留
+    let u = req.url.slice(3);
+    // 去掉query string
+    u = u.split('?')[0];
+    //去掉-，把號碼串起來
+    u = u.split('-').join('');
+    res.json({mobile: u});
+})
+
+app.use('/admins', require(__dirname + '/routes/admin2'));
+
 app.use((req, res) => {
     res.type('text/html');
     res.status(404).render('404');
