@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="">
+    <title>test module</title>
+</head>
+<style>
+    .photo {
+        display: inline-block;
+        position: relative;
+        width: 200px;
+        height: 200px;
+        border: 1px solid blue;
+
+    }
+
+    .photo img {
+        position: absolute;
+        width: 100%;
+    }
+
+    .photo .remove {
+        width: 10px;
+        height: 10px;
+        background-color: #f00;
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+</style>
+
+<body>
+    <form name="form1">
+        <input type="file" accept="image/*" multiple name="photos" onchange="upload()">
+    </form>
+
+    <div id="photo-div">
+        <!-- <div class="photo">
+            <img src="/uploads/6914418f-6059-4eb4-b37b-de1026b95dee.png" alt="">
+            <span class="remove" onclick="removeItem(event)">
+                <i class="fa-solid fa-xmark"></i>
+            </span>
+        </div> -->
+    </div>
+
+    <script>
+        let photoData = [];
+        const photo_div = document.querySelector('#photo-div');
+
+        const upload_tpl = ({ filename }) => `
+        <div class="photo" data-id="${filename}">
+            <img src="/uploads/${filename}" alt="">
+            <span class="remove" onclick="removeItem(event)">
+                <i class="fa-solid fa-xmark"></i>
+            </span>
+        </div>
+            `;
+
+
+        function render() {
+            photo_div.innerHTML =
+                photoData.map(obj => upload_tpl(obj)).join('');
+        }
+
+        async function upload() {
+            const fd = new FormData(document.form1);
+
+            const r = await fetch('/try-upload2', {
+                method: 'POST',
+                body: fd,
+            });
+
+            const result = await r.json();
+            photoData.push(...result);
+            render();
+        }
+
+        function removeItem(event) {
+            const item = evet.target.closest('.photo');
+            const id = item.getAttribute('data-id');
+            console.log(id);
+            photoData = photoData.filter(obj => obj.filename !== id);
+            render();
+        }
+    </script>
+</body>
+
+</html>
