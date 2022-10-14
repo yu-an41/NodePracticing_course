@@ -3,7 +3,11 @@ require('dotenv').config();
 
 const express = require('express');
 express.yuan = '你好~';
+
 const session = require('express-session');
+const MysqlStore = require('express-mysql-session')(session);
+const db = require(__dirname + '/modules/db_connect2');
+const sessionStore = new MysqlStore({}, db);
 
 // const multer = require('multer');
 // const upload = multer({ dest: 'tmp_uploads/' });
@@ -19,6 +23,7 @@ app.use(session({
     saveUninitialized: false,
     resave: false,
     secret: "efk1234er4uiydsylerug",
+    store: sessionStore,
     cookie: {
         maxAge:1_200_000,
     }
@@ -145,6 +150,11 @@ app.get('/try-moment', (req, res) => {
         t3: m2.format(fm),
         t4: m2.tz('Europe/Berlin').format(fm)
     })
+})
+
+app.get('/try-db', async (req, res) => {
+    const [rows] = await db.query("SELECT * FROM address_book LIMIT 5,5");
+    res.json(rows);
 })
 
 app.use((req, res) => {
