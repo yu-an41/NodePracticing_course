@@ -3,18 +3,31 @@ require('dotenv').config();
 
 const express = require('express');
 express.yuan = '你好~';
+const session = require('express-session');
 
 // const multer = require('multer');
 // const upload = multer({ dest: 'tmp_uploads/' });
 const upload = require(__dirname + '/modules/upload-img');
 const fs = require('fs').promises;
+const moment = require('moment-timezone');
 
 const app = express();
 
 app.set('view engine', 'ejs');
 
+app.use(session({
+    saveUninitialized: false,
+    resave: false,
+    secret: "efk1234er4uiydsylerug",
+    cookie: {
+        maxAge:1_200_000,
+    }
+}));
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+
+
 app.use(express.static('public'));
 // 也可以這樣寫 app.use(express.static(__dirname + '/public'));
 app.use(express.static('node_modules/bootstrap/dist'));
@@ -95,6 +108,44 @@ app.get(/^\/m\/09\d{2}\-?\d{3}\-?\d{3}$/i, (req, res) => {
 })
 
 app.use('/admins', require(__dirname + '/routes/admin2'));
+
+const myMiddle = (req, res, next) => {
+    res.locals = {...res.locals, yuna: 'hi'};
+    res.locals.feelLike = 'sleepy';
+    next();
+};
+
+app.get('/try-middle', [myMiddle], (req, res) => {
+    res.json(res.locals);
+})
+
+
+app.use('/try-session', (req, res) => {
+    req.session.aaa ||= 0;
+    req.session.aaa ++;
+    res.json(req.session);
+})
+
+app.get('/try-date', (req, res) => {
+    const now = new Date;
+
+    res.json({
+        t1: now,
+        t2: now.toString(),
+    })
+})
+
+app.get('/try-moment', (req, res) => {
+    const m = moment('05/10/22', 'DD/MM/YY');
+    const m2 = moment(req.session.cookie.expires);
+    const fm = 'YYYY-MM-DD HH:mm:ss';
+    res.json({
+        t1: m,
+        t2: m.format(fm),
+        t3: m2.format(fm),
+        t4: m2.tz('Europe/Berlin').format(fm)
+    })
+})
 
 app.use((req, res) => {
     res.type('text/html');
