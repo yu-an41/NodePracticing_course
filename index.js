@@ -45,6 +45,9 @@ app.get('/', (req, res) => {
 const port = process.env.SERVER_PORT || 3002;
 // 若是沒有找到就會用3002當作通訊埠
 
+app.use('/ab', require(__dirname + '/routes/address-book'));
+
+
 app.get('/abc', (req, res) => {
     res.send(`<h2>倪好~~</h2>`);
 })
@@ -155,6 +158,35 @@ app.get('/try-moment', (req, res) => {
 app.get('/try-db', async (req, res) => {
     const [rows] = await db.query("SELECT * FROM address_book LIMIT 5,5");
     res.json(rows);
+})
+
+app.get('/try-db-add', async (req, res) => {
+    const name = '郝美麗';
+    const email = 'mayli@gmail.com';
+    const mobile = '0945678123';
+    const birthday = '1999-07-13';
+    const address = '台北市';
+
+    const sql = "INSERT INTO `address_book`(`name`, `email`, `mobile`, `birthday`, `address`, `created_at`) VALUES (?, ?, ?, ?, ?, NOW())";
+
+    // const [{insertId, affectedRows}] = await db.query(sql, [name, email, mobile, birthday, address]);
+    // res.json({insertId, affectedRows});
+
+    const [result] = await db.query(sql, [name, email, mobile, birthday, address]);
+    res.json(result);
+})
+
+app.get('/try-db-add2', async (req, res) => {
+    const name = '郝帥氣';
+    const email = 'shuai777@gmail.com';
+    const mobile = '0945678123';
+    const birthday = '1999-07-13';
+    const address = '金門縣';
+
+    const sql = "INSERT INTO `address_book` set ?";
+
+    const [result] = await db.query(sql, [{name, email, mobile, birthday, address, created_at: new Date()}]);
+    res.json(result);
 })
 
 app.use((req, res) => {
