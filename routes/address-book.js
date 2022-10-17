@@ -7,7 +7,7 @@ router.use((req, res, next) => {
 })
 
 router.get(['/', '/list'], async (req, res) => {
-    const perPage = 10;
+    const perPage = 20;
     let page = +req.query.page || 1;
     if(page < 0) {
         return res.redirect(req.baseUrl);
@@ -46,7 +46,7 @@ router.get(['/', '/list'], async (req, res) => {
 
     // return res.json({totalRows, totalPages, perPage, page, rows});
 
-    res.render('address-book/list', {totalRows, totalPages, perPage, page, rows});
+    res.render('address-book/list', {totalRows, totalPages, perPage, page, rows, search, query: req.query});
 })
 
 module.exports = router;
