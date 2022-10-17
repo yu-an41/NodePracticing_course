@@ -15,7 +15,7 @@
         <div class="row">
             <div class="col-lg-8"></div>
             <div class="col-lg-4">
-                <form class="d-flex" role="search">
+                <form class="d-flex" role="search" onsubmit="doSearch(event)">
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
                         name="search" value="">
                     <button class="btn btn-outline-success" type="submit">Search</button>
@@ -111,7 +111,27 @@
                 p_container.innerHTML = renderPagi(result);
                 t_container.innerHTML = renderTable(result);
             })
+        
+        function doSearch(event) {
+            event.preventDefault();
+            // 不讓表單送出
 
+            const f = event.currentTarget;
+            console.log({search: f.search.value});
+
+            const usp = new URLSearchParams({search: f.search.value});
+            history.pushState('', '', '?'+usp.toString());
+            
+            console.log(location.search);
+
+            fetch('/ab/api'+location.search)
+                .then(r => r.json())
+                .then(result => {
+                    console.log(result);
+                    p_container.innerHTML = renderPagi(result);
+                    t_container.innerHTML = renderTable(result);
+                })
+        }
     </script>
 </body>
 
