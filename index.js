@@ -14,11 +14,15 @@ const sessionStore = new MysqlStore({}, db);
 const upload = require(__dirname + '/modules/upload-img');
 const fs = require('fs').promises;
 const moment = require('moment-timezone');
+const { format } = require('path');
 
 const app = express();
 
 app.set('view engine', 'ejs');
 
+
+
+// top-level middleware
 app.use(session({
     saveUninitialized: false,
     resave: false,
@@ -36,6 +40,14 @@ app.use(express.json());
 app.use(express.static('public'));
 // 也可以這樣寫 app.use(express.static(__dirname + '/public'));
 app.use(express.static('node_modules/bootstrap/dist'));
+
+app.use((req, res, next) => {
+    // 自己定義的 template helper functions
+    res.locals.toDateString = (d) => moment(d).format('YYYY-MM-DD');
+    res.locals.toDateTimeString = (d) => moment(d).format('YYYY-MM-DD HH:mm:ss');
+    
+    next();
+})
 
 app.get('/', (req, res) => {
     // res.send('Hello world');
