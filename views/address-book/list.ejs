@@ -1,7 +1,40 @@
 <%- include('./../parts/html-head') %>
-<%- include('./../parts/navbar') %>
-<div class="container">
-    <%= totalRows %>
-</div>
-<%- include('./../parts/scripts') %>
-<%- include('./../parts/html-foot') %>
+    <%- include('./../parts/navbar') %>
+        <div class="container">
+            <div class="col">
+                <div class="row">
+
+                </div>
+            </div>
+            <div class="col">
+                <div class="row">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Mobile</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Birthady</th>
+                                <th scope="col">Address</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for (let r of rows) {%>
+                            <tr>
+                                <td><%= r.sid %></td>
+                                <td><%= r.name %></td>
+                                <td><%= r.mobile %></td>
+                                <td><%= r.email %></td>
+                                <td><%= r.birthday %></td>
+                                <td><%= r.address %></td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+        <%- include('./../parts/scripts') %>
+            <%- include('./../parts/html-foot') %>
