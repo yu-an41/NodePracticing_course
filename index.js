@@ -16,6 +16,8 @@ const fs = require('fs').promises;
 const moment = require('moment-timezone');
 const { format } = require('path');
 
+const cors = require('cors');
+
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -23,13 +25,15 @@ app.set('view engine', 'ejs');
 
 
 // top-level middleware
+app.use(cors());
+
 app.use(session({
     saveUninitialized: false,
     resave: false,
     secret: "efk1234er4uiydsylerug",
     store: sessionStore,
     cookie: {
-        maxAge:1_200_000,
+        maxAge: 1_200_000,
     }
 }));
 
@@ -45,7 +49,7 @@ app.use((req, res, next) => {
     // 自己定義的 template helper functions
     res.locals.toDateString = (d) => moment(d).format('YYYY-MM-DD');
     res.locals.toDateTimeString = (d) => moment(d).format('YYYY-MM-DD HH:mm:ss');
-    
+
     next();
 })
 
@@ -96,7 +100,7 @@ app.post('/try-post', (req, res) => {
     res.json(req.body);
 })
 
-app.post('/try-upload', upload.single('avatar'), async (req, res)=> {
+app.post('/try-upload', upload.single('avatar'), async (req, res) => {
     res.json(req.file);
     /*
     if (req.file && req.file.originalname) {
@@ -106,10 +110,10 @@ app.post('/try-upload', upload.single('avatar'), async (req, res)=> {
     else {
         res.json({ msg: '沒有上傳檔案' });
     }
-    */ 
+    */
 })
 
-app.post('/try-upload2', upload.array('photos'), async (req, res)=> {
+app.post('/try-upload2', upload.array('photos'), async (req, res) => {
     res.json(req.files);
 })
 
@@ -124,13 +128,13 @@ app.get(/^\/m\/09\d{2}\-?\d{3}\-?\d{3}$/i, (req, res) => {
     u = u.split('?')[0];
     //去掉-，把號碼串起來
     u = u.split('-').join('');
-    res.json({mobile: u});
+    res.json({ mobile: u });
 })
 
 app.use('/admins', require(__dirname + '/routes/admin2'));
 
 const myMiddle = (req, res, next) => {
-    res.locals = {...res.locals, yuna: 'hi'};
+    res.locals = { ...res.locals, yuna: 'hi' };
     res.locals.feelLike = 'sleepy';
     next();
 };
@@ -142,7 +146,7 @@ app.get('/try-middle', [myMiddle], (req, res) => {
 
 app.use('/try-session', (req, res) => {
     req.session.aaa ||= 0;
-    req.session.aaa ++;
+    req.session.aaa++;
     res.json(req.session);
 })
 
@@ -197,7 +201,7 @@ app.get('/try-db-add2', async (req, res) => {
 
     const sql = "INSERT INTO `address_book` set ?";
 
-    const [result] = await db.query(sql, [{name, email, mobile, birthday, address, created_at: new Date()}]);
+    const [result] = await db.query(sql, [{ name, email, mobile, birthday, address, created_at: new Date() }]);
     res.json(result);
 })
 
