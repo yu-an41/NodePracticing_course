@@ -6,7 +6,7 @@ router.use((req, res, next) => {
     next();
 })
 
-router.get(['/', '/list'], async (req, res) => {
+async function getListData(req) {
     const perPage = 20;
     let page = +req.query.page || 1;
     if(page < 0) {
@@ -44,9 +44,17 @@ router.get(['/', '/list'], async (req, res) => {
         //因為rows已經在外面宣告過，可以用[]的方式找到並重新給值
     }
 
-    // return res.json({totalRows, totalPages, perPage, page, rows});
+    return {totalRows, totalPages, perPage, page, rows, search, query: req.query}
+}
 
-    res.render('address-book/list', {totalRows, totalPages, perPage, page, rows, search, query: req.query});
+router.get(['/', '/list'], async (req, res) => {
+    const data = await getListData(req);
+    
+    res.render('address-book/list', data);
+});
+
+router.get(['/api', '/api/list'], async (req, res) => {    
+    res.json(await getListData(req));
 })
 
 module.exports = router;
