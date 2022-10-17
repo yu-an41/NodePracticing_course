@@ -6,7 +6,7 @@ router.use((req, res, next) => {
     next();
 })
 
-router.get('/', async (req, res) => {
+router.get(['/', '/list'], async (req, res) => {
     const perPage = 10;
     let page = req.query.page || 1;
     if(page < 0) {
@@ -30,7 +30,9 @@ router.get('/', async (req, res) => {
         //因為rows已經在外面宣告過，可以用[]的方式找到並重新給值
     }
 
-    res.json({totalRows, totalPages, perPage, page, rows});
+    // res.json({totalRows, totalPages, perPage, page, rows});
+    
+    res.render('address-book/list', {totalRows, totalPages, perPage, page, rows});
 })
 
 module.exports = router;
