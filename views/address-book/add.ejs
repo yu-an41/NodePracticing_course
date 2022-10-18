@@ -31,6 +31,10 @@
                                     <textarea class="form-control" name="address" id="address" cols="50"
                                         rows="3"></textarea>
                                 </div>
+                                <div>
+                                    <input type="hidden" name="test" value="123">
+                                    <input type="hidden" name="test" value="456">
+                                </div>
                                 <button type="submit" class="btn btn-primary">新增</button>
                             </form>
                         </div>
@@ -79,6 +83,29 @@
                 })
             }
             */
+            
+            // json //適合較複雜的資料結構
+            function checkForm(evt) {
+                evt.preventDefault();
+                const fd = new FormData(document.form1);
+                const data = {};
 
+                for(let [k, v] of fd) {
+                    // console.log({k: v});
+                    data[k] = v; //如有重複key name會後蓋前
+                }
+
+                fetch('', {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(r => r.json())
+                .then(result => {
+                    console.log(result);
+                })
+            }
         </script>
             <%- include('./../parts/html-foot') %>
