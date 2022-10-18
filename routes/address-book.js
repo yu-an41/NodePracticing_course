@@ -1,3 +1,4 @@
+const e = require('express');
 const express = require('express');
 const router = express.Router();
 const db = require(__dirname + '/../modules/db_connect2');
@@ -78,6 +79,22 @@ router.post('/add', upload.none(), async (req, res) => {
     if(result.affectedRows) output.success = true;
 
     res.json(output); 
+})
+
+//編輯資料
+router.get('/edit/:sid', async (req, res) => {
+    const sql = "SELECT * FROM `address_book` WHERE sid = ?";
+    const [rows] = await db.query(sql, [req.params.sid]);
+
+    if(!rows || !rows.length) {
+        return res.redirect(req.baseUrl);
+    }
+    //res.json(rows[0]);
+    res.render('address-book/edit', rows[0]);
+});
+
+router.put('/edit/:sid', async (req, res) => {
+    // res.json(req.body);
 })
 
 router.get(['/', '/list'], async (req, res) => {

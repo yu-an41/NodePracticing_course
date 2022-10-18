@@ -5,7 +5,8 @@
                 <div class="col-lg-8"></div>
                 <div class="col-lg-4">
                     <form class="d-flex" role="search">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search" value="<%=search%>">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"
+                            name="search" value="<%=search%>">
                         <button class="btn btn-outline-success" type="submit">Search</button>
                     </form>
                 </div>
@@ -15,23 +16,25 @@
                     <nav aria-label="Page navigation example">
                         <ul class="pagination">
                             <li class="page-item <%= 1===page ? 'disabled' : '' %>">
-                                <a class="page-link" href="?<%= new URLSearchParams({...query, page: page-1}).toString() %>">
+                                <a class="page-link"
+                                    href="?<%= new URLSearchParams({...query, page: page-1}).toString() %>">
                                     <i class="fa-solid fa-circle-arrow-left"></i>
                                 </a>
                             </li>
-                            <% for(let i = page-5; i <= page+5; i++) 
-                                if(i>=1 && i<=totalPages) { %>
+                            <% for(let i=page-5; i <=page+5; i++) if(i>=1 && i<=totalPages) { %>
                                     <li class="page-item <%= i===page ? 'active' : '' %>">
-                                        <a class="page-link" href="?<%= new URLSearchParams({...query, page: i}).toString() %>">
+                                        <a class="page-link"
+                                            href="?<%= new URLSearchParams({...query, page: i}).toString() %>">
                                             <%= i %>
                                         </a>
                                     </li>
-                            <% } %>
-                                    <li class="page-item <%= totalPages===page ? 'disabled' : '' %>">
-                                        <a class="page-link" href="?<%= new URLSearchParams({...query, page: page+1}).toString() %>">
-                                            <i class="fa-solid fa-circle-arrow-right"></i>
-                                        </a>
-                                    </li>
+                                    <% } %>
+                                        <li class="page-item <%= totalPages===page ? 'disabled' : '' %>">
+                                            <a class="page-link"
+                                                href="?<%= new URLSearchParams({...query, page: page+1}).toString() %>">
+                                                <i class="fa-solid fa-circle-arrow-right"></i>
+                                            </a>
+                                        </li>
                         </ul>
                     </nav>
                 </div>
@@ -41,17 +44,27 @@
                     <table class="table table-striped">
                         <thead>
                             <tr>
+                                <th scope="col">                                    <i class="fa-solid fa-trash"></i>
+                                </th>
                                 <th scope="col">#</th>
                                 <th scope="col">Name</th>
                                 <th scope="col">Mobile</th>
                                 <th scope="col">Email</th>
                                 <th scope="col">Birthady</th>
                                 <th scope="col">Address</th>
+                                <th scope="col">
+                                    <i class="fa-solid fa-pen-to-square"></i>
+                                </th>
                             </tr>
                         </thead>
                         <tbody>
                             <% for (let r of rows) {%>
                                 <tr>
+                                    <td>
+                                        <a href="">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </a>
+                                    </td>
                                     <td>
                                         <%= r.sid %>
                                     </td>
@@ -69,6 +82,11 @@
                                     </td>
                                     <td>
                                         <%= r.address %>
+                                    </td>
+                                    <td>
+                                        <a href="/ab/edit/<%= r.sid %>">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </a>
                                     </td>
                                 </tr>
                                 <% } %>
