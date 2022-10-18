@@ -41,7 +41,9 @@
         <%- include('./../parts/scripts') %>
         <script>
             // multiparts
+            /*
             function checkForm(evt) {
+                evt.preventDefault();
                 const fd = new FormData(document.form1);
 
                 fetch('', {
@@ -53,5 +55,30 @@
                     console.log(result);
                 })
             }
+            */
+
+            // urlencoded
+            /*
+            function checkForm(evt) {
+                evt.preventDefault();
+
+                const fd = new FormData(document.form1);
+                const usp = new URLSearchParams(fd);
+                console.log(usp.toString());
+
+                fetch('', {
+                    method: 'POST',
+                    body: usp.toString(),
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                })
+                .then(r => r.json())
+                .then(result => {
+                    console.log(result);
+                })
+            }
+            */
+
         </script>
             <%- include('./../parts/html-foot') %>
