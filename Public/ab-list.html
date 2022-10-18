@@ -41,65 +41,65 @@
 
         function renderPagi({ page, totalPages }) {
 
-            return `
-            <nav aria-label="Page navigation example">
-                    <ul class="pagination">
-                        <li class="page-item ">
-                            <a class="page-link" href="#">
-                                <i class="fa-solid fa-circle-arrow-left"></i>
-                            </a>
-                        </li>
-                        ${Array(11).fill(1).map((el, i) => {
-                            const p = page - 5 + i;
-                            if (p < 1 || p > totalPages) return ``;
+        //     return `
+        //     <nav aria-label="Page navigation example">
+        //             <ul class="pagination">
+        //                 <li class="page-item ">
+        //                     <a class="page-link" href="#">
+        //                         <i class="fa-solid fa-circle-arrow-left"></i>
+        //                     </a>
+        //                 </li>
+        //                 ${Array(11).fill(1).map((el, i) => {
+        //                     const p = page - 5 + i;
+        //                     if (p < 1 || p > totalPages) return ``;
 
-                            return `
-                                <li class="page-item ${p === page ? 'active' : ''}">
-                                <a class="page-link" href="javascript:gotoPage(${p})">${p}
-                            </a>
-                            </li>
-                            `
-                        }).join('')
-                        }
-                        <li class="page-item ">
-                            <a class="page-link" href="#">
-                                <i class="fa-solid fa-circle-arrow-right"></i>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            `;
+        //                     return `
+        //                         <li class="page-item ${p === page ? 'active' : ''}">
+        //                         <a class="page-link" href="javascript:gotoPage(${p})">${p}
+        //                     </a>
+        //                     </li>
+        //                     `
+        //                 }).join('')
+        //                 }
+        //                 <li class="page-item ">
+        //                     <a class="page-link" href="#">
+        //                         <i class="fa-solid fa-circle-arrow-right"></i>
+        //                     </a>
+        //                 </li>
+        //             </ul>
+        //         </nav>
+        //     `;
         }
 
         function renderTable({ rows }) {
-            return `
-            <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Name</th>
-                            <th scope="col">Mobile</th>
-                            <th scope="col">Email</th>
-                            <th scope="col">Birthady</th>
-                            <th scope="col">Address</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        ${rows.map(el => {
-                return `
-                            <tr>
-                            <td>${el.sid}</td>
-                            <td>${el.name}</td>
-                            <td>${el.mobile}</td>
-                            <td>${el.email}</td>
-                            <td>${dayjs(el.birthday).format('YYYY-MM-DD')}</td>
-                            <td>${el.address}</td>
-                        </tr>
-                            `;
-            }).join('')}
-                    </tbody>
-                </table>
-            `;
+            // return `
+            // <table class="table table-striped">
+            //         <thead>
+            //             <tr>
+            //                 <th scope="col">#</th>
+            //                 <th scope="col">Name</th>
+            //                 <th scope="col">Mobile</th>
+            //                 <th scope="col">Email</th>
+            //                 <th scope="col">Birthady</th>
+            //                 <th scope="col">Address</th>
+            //             </tr>
+            //         </thead>
+            //         <tbody>
+            //             ${rows.map(el => {
+            //     return `
+            //                 <tr>
+            //                 <td>${el.sid}</td>
+            //                 <td>${el.name}</td>
+            //                 <td>${el.mobile}</td>
+            //                 <td>${el.email}</td>
+            //                 <td>${dayjs(el.birthday).format('YYYY-MM-DD')}</td>
+            //                 <td>${el.address}</td>
+            //             </tr>
+            //                 `;
+            // }).join('')}
+            //         </tbody>
+            //     </table>
+            // `;
         }
 
         const search = location.search;
@@ -112,8 +112,14 @@
                 t_container.innerHTML = renderTable(result);
             })
         
-        async function getData() {
-            let usp = new URLSearchParams(location.search);
+        async function getDataandRender() {
+            const usp = new URLSearchParams(location.search);
+            
+            if(usp.get('search')) {
+                document.forms[0].search.value = usp.get('search');
+            } else {
+                document.forms[0].search.value = '';
+            }
 
             const r = await fetch('ab/api?'+usp.toString());
             const result = await r.json();
@@ -121,13 +127,10 @@
             console.log(result);
             p_container.innerHTML = renderPagi(result);
             t_container.innerHTML = renderTable(result);
-
-
+            
         }
 
-        const usp = new URLSearchParams(location.search);
-        if(usp.get('search')) document.forms[0].search.value = usp.get('search');
-        getData();
+        getDataandRender();
 
         function doSearch(event) {
             event.preventDefault();
@@ -137,7 +140,7 @@
 
             const usp = new URLSearchParams({search: f.search.value});
             history.pushState('', '', '?'+usp.toString());
-            getData();
+            getDataandRender();
             // console.log(location.search);
 
             // fetch('/ab/api'+location.search)
@@ -156,9 +159,9 @@
 
             // const usp = new URLSearchParams({page: p});
             history.pushState('', '', '?'+usp.toString());
-            getData();
-            // console.log(location.search);
+            getDataandRender();
 
+            // console.log(location.search);
 
             // fetch('/ab/api'+location.search)
             //     .then(r => r.json())
