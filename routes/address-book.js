@@ -5,7 +5,11 @@ const db = require(__dirname + '/../modules/db_connect2');
 const upload = require(__dirname + '/../modules/upload-img');
 
 router.use((req, res, next) => {
-    next();
+    if(req.session.admin && req.session.admin.account) {
+        next();
+    } else {
+        res.status(403).send('沒有權限喔！');
+    }
 })
 
 async function getListData(req, res) {
@@ -83,6 +87,7 @@ router.post('/add', upload.none(), async (req, res) => {
 
 //編輯資料
 router.get('/edit/:sid', async (req, res) => {
+    res.locals.title = '修改 | ' +res.locals.title;
     const sql = "SELECT * FROM `address_book` WHERE sid = ?";
     const [rows] = await db.query(sql, [req.params.sid]);
 
@@ -94,7 +99,37 @@ router.get('/edit/:sid', async (req, res) => {
 });
 
 router.put('/edit/:sid', async (req, res) => {
-    // res.json(req.body);
+    const output = {
+        success: false,
+        code: 0,
+        errer: {},
+        postData: req.body,
+    };
+
+    const sql = "UPDATE `address_book` SET `name`=?, `email`=?, `mobile`=?,`birthday`=?, `address`=? WHERE sid=?";
+
+
+    const [result] = await db.query(sql, [
+        req.body.name,
+        req.body.email,
+        req.body.mobile,
+        req.body.birthday || null,
+        req.body.address,
+        req.params.sid
+    ]);
+
+    if(result.changedRows) output.success = true;
+
+    res.json(output); 
+})
+
+router.delete('/del/:sid', async (req, res) => {
+    const sql = "DELETE FROM `address_book` WHERE sid = ?";
+    const [result] = await db.query(sql, [req.params.sid]);
+
+    res.json({success: !!result.affectedRows});
+    // !!轉成布林值
+
 })
 
 router.get(['/', '/list'], async (req, res) => {

@@ -61,7 +61,7 @@
                             <% for (let r of rows) {%>
                                 <tr>
                                     <td>
-                                        <a href="">
+                                        <a href="javascript:deleteInfo(<%= r.sid %>)">
                                             <i class="fa-solid fa-trash"></i>
                                         </a>
                                     </td>
@@ -97,4 +97,18 @@
             </div>
         </div>
         <%- include('./../parts/scripts') %>
+        <script>
+            function deleteInfo(sid) {
+                if(confirm(`確定要刪除編號為${sid}的資料嗎？`)) {
+                    fetch('/ab/del/'+sid, {
+                        method: 'DELETE'
+                    })
+                    .then(r => r.json())
+                    .then(result => {
+                        console.log(JSON.stringify(result));
+                        location.reload();
+                    })
+                }
+            }
+        </script>
             <%- include('./../parts/html-foot') %>

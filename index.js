@@ -58,6 +58,7 @@ app.use((req, res, next) => {
     res.locals.toDateString = (d) => moment(d).format('YYYY-MM-DD');
     res.locals.toDateTimeString = (d) => moment(d).format('YYYY-MM-DD HH:mm:ss');
     res.locals.title = 'Bambi\'s Home';
+    res.locals.session = req.session;
 
     next();
 })
@@ -72,6 +73,20 @@ const port = process.env.SERVER_PORT || 3002;
 
 app.use('/ab', require(__dirname + '/routes/address-book'));
 
+app.get('/fake-login', (req, res) => {
+    req.session.admin = {
+        id: 613,
+        account: 'yuan',
+        nickname: '鄭斑比'
+    };
+    res.redirect('/');
+})
+
+app.get('/logout', (req, res) => {
+    delete req.session.admin;
+    res.redirect('/');
+
+})
 
 app.get('/abc', (req, res) => {
     res.send(`<h2>倪好~~</h2>`);
