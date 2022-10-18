@@ -15,8 +15,8 @@ const upload = require(__dirname + '/modules/upload-img');
 const fs = require('fs').promises;
 const moment = require('moment-timezone');
 const { format } = require('path');
-
 const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
 
@@ -227,6 +227,11 @@ app.get('/try-db-add2', async (req, res) => {
 
     const [result] = await db.query(sql, [{ name, email, mobile, birthday, address, created_at: new Date() }]);
     res.json(result);
+})
+
+app.get('/yahoo', async (req, res) => {
+    const response = await axios.get('https://tw.yahoo.com/');
+    res.send(response.data);
 })
 
 app.use((req, res) => {
