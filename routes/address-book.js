@@ -49,6 +49,37 @@ async function getListData(req, res) {
     return {totalRows, totalPages, perPage, page, rows, search, query: req.query}
 }
 
+// 新增資料
+router.get('/add', async (req, res) => {    
+    res.locals.title = '新增 | ' +res.locals.title;
+    res.render('address-book/add');
+})
+
+router.post('/add', upload.none(), async (req, res) => {    
+    // res.json(req.body);
+    const output = {
+        success: false,
+        code: 0,
+        errer: {},
+        postData: req.body,
+    };
+
+    const sql = "INSERT INTO `address_book`(`name`, `email`, `mobile`, `birthday`, `address`, `created_at`) VALUES (?, ?, ?, ?, ?, NOW())";
+
+
+    const [result] = await db.query(sql, [
+        req.body.name,
+        req.body.email,
+        req.body.mobile,
+        req.body.birthday || null, //如果沒舔生日就會送空值而非空字串
+        req.body.address,
+    ]);
+
+    if(result.affectedRows) output.success = true;
+
+    res.json(output); 
+})
+
 router.get(['/', '/list'], async (req, res) => {
     const data = await getListData(req, res);
     
@@ -59,12 +90,6 @@ router.get(['/api', '/api/list'], async (req, res) => {
     res.json(await getListData(req, res));
 })
 
-router.get('/add', async (req, res) => {    
-    res.render('address-book/add');
-})
 
-router.post('/add', upload.none(), async (req, res) => {    
-    res.json(req.body);
-})
 
 module.exports = router;

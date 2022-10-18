@@ -45,7 +45,7 @@
         <%- include('./../parts/scripts') %>
         <script>
             // multiparts
-            /*
+            
             function checkForm(evt) {
                 evt.preventDefault();
                 const fd = new FormData(document.form1);
@@ -56,10 +56,15 @@
                 })
                 .then(r => r.json())
                 .then(result => {
-                    console.log(result);
+                    if(result.success) {
+                        console.log(result);
+                        location.href = './';
+                    } else {
+                        alert('無法新增！');
+                    }
                 })
             }
-            */
+            
 
             // urlencoded
             /*
@@ -85,6 +90,7 @@
             */
             
             // json //適合較複雜的資料結構
+            /*
             function checkForm(evt) {
                 evt.preventDefault();
                 const fd = new FormData(document.form1);
@@ -107,5 +113,6 @@
                     console.log(result);
                 })
             }
+            */
         </script>
             <%- include('./../parts/html-foot') %>
