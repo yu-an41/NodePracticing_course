@@ -25,6 +25,14 @@ app.set('view engine', 'ejs');
 
 
 // top-level middleware
+const corsOptions = {
+    credentials: true,
+    origin: function(origin, callback) {
+        callback(null, true)
+        //沒限制拜訪對象
+    }
+
+}
 app.use(cors());
 
 app.use(session({
