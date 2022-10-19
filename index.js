@@ -258,6 +258,31 @@ app.get('/cate', async (req, res) => {
     }
     res.json(firsts);
 })
+
+app.get('/cate2', async (req, res) => {
+    const [rows] = await db.query("SELECT * FROM categories ORDER BY sid");
+
+    const dict = {};
+    for(let i of rows) {
+        dict[i.sid] = i;
+    }
+
+    for(let i of rows) {
+        if(i.parent_sid !== 0) {
+            const p = dict[i.parent_sid];
+            p.children ||= [];
+            p.children.push(i);
+        }
+    }
+    const firsts = [];
+    for (let i of rows) {
+        if (i.parent_sid === 0) {
+            firsts.push(i);
+        }
+    }
+
+    res.json(firsts);
+})
 app.use((req, res) => {
     res.type('text/html');
     res.status(404).render('404');
