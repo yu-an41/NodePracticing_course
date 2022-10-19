@@ -27,7 +27,7 @@ app.set('view engine', 'ejs');
 // top-level middleware
 const corsOptions = {
     credentials: true,
-    origin: function(origin, callback) {
+    origin: function (origin, callback) {
         callback(null, true)
         //沒限制拜訪對象
     }
@@ -234,6 +234,30 @@ app.get('/yahoo', async (req, res) => {
     res.send(response.data);
 })
 
+app.get('/cate', async (req, res) => {
+    const [rows] = await db.query("SELECT * FROM categories ORDER BY sid");
+    // res.json(rows);
+
+
+    // 找出第一層
+    const firsts = [];
+    for (let i of rows) {
+        if (i.parent_sid === 0) {
+            firsts.push(i);
+        }
+    }
+
+    // 將第二層放在第一層children裡面
+    for (let f of firsts) {
+        for (let i of rows) {
+            if (i.parent_sid === f.sid) {
+                f.children ||= [];
+                f.children.push(i);
+            }
+        }
+    }
+    res.json(firsts);
+})
 app.use((req, res) => {
     res.type('text/html');
     res.status(404).render('404');
