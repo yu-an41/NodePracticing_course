@@ -17,6 +17,9 @@ const moment = require('moment-timezone');
 const { format } = require('path');
 const cors = require('cors');
 const axios = require('axios');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
 
 const app = express();
 
@@ -53,12 +56,23 @@ app.use(express.static('public'));
 // 也可以這樣寫 app.use(express.static(__dirname + '/public'));
 app.use(express.static('node_modules/bootstrap/dist'));
 
-app.use((req, res, next) => {
+app.use(async (req, res, next) => {
     // 自己定義的 template helper functions
     res.locals.toDateString = (d) => moment(d).format('YYYY-MM-DD');
     res.locals.toDateTimeString = (d) => moment(d).format('YYYY-MM-DD HH:mm:ss');
     res.locals.title = 'Bambi\'s Home';
     res.locals.session = req.session;
+
+    res.locals.auth = {}; // 預設值
+    let auth = req.get('Authorization');
+
+    if(auth && auth.indexOf('Bearer ') === 0) {
+        auth = auth.slice(7);
+        try {
+            const payload = await jwt.verify(auth, process.env.JWT_SECRET);
+            res.locals.auth = payload;
+        } catch(ex) {}
+    }
 
     next();
 })
@@ -283,6 +297,40 @@ app.get('/cate2', async (req, res) => {
 
     res.json(firsts);
 })
+
+app.post('/login-api', async (req, res) => {
+    const output = {
+        success: false,
+        error: '帳密錯誤',
+        postData: req.body,
+        auth: {},
+    };
+
+    const sql = "SELECT * FROM admins WHERE account = ?";
+    const [rows] = await db.query(sql, [req.body.account]);
+
+    if (! rows.length) {
+        return res.json(output);
+    }
+
+    const row = rows[0];
+
+    output.success = await bcrypt.compare(req.body.password, row['password_hash']);
+    if(output.success) {
+        output.error='';
+        const {sid, account, admin_group} = row;
+        const token = jwt.sign({sid, account, admin_group}, process.env.JWT_SECRET);
+        output.auth= {
+            sid,
+            account,
+            token
+        }
+
+    }
+    res.json(output);
+
+})
+
 app.use((req, res) => {
     res.type('text/html');
     res.status(404).render('404');
